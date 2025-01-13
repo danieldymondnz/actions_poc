@@ -1,4 +1,4 @@
-name: Integration Tests
+name: Build & Test - API
 on: workflow_dispatch
 
 jobs:
