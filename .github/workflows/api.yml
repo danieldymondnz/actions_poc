@@ -21,11 +21,11 @@ jobs:
         run: pip install pytest requests
 
       - name: Run tests
-        working-directory: src/actions_poc
+        working-directory: demo
         run: |
           # Give the API a moment to start
           sleep 2
-          pytest demo/test/integration/test_integration_api.py -v
+          pytest test/integration/test_integration_api.py -v
 
       - name: Cleanup
         if: always()
