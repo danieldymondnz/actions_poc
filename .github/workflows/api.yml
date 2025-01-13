@@ -6,31 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      
+      - uses: ./.github/actions/container-build-and-test
         with:
-          python-version: '3.8'
-
-      - name: Build and start API container
-        working-directory: demo/src/api
-        run: |
-          docker build -t test-api .
-          docker run -d -p 8000:8000 test-api
-          sleep 2
-          docker ps -a
-          docker logs $(docker ps -a -q --filter ancestor=test-api)
-          curl -v http://localhost:8000/health
-
-      - name: Install test dependencies 
-        run: pip install pytest requests
-
-      - name: Run tests
-        working-directory: demo
-        run: |
-          # Give the API a moment to start
-          sleep 2
-          pytest test/integration/test_integration_api.py -v
-
-      - name: Cleanup
-        if: always()
-        run: docker ps -q | xargs -r docker stop
+          docker-file-path: demo/src/api
+          test-path: demo/test/integration/test_integration_api.py

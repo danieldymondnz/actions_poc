@@ -1,0 +1,52 @@
+name: 'Container Build and Test'
+description: 'Builds a Docker container runs pytest against it'
+
+inputs:
+  python-version:
+    description: 'Python version to use'
+    required: false
+    default: '3.8'
+  docker-file-path:
+    description: 'Path to the Dockerfile'
+    required: false
+    default: '.'
+  docker-image-name:
+    description: 'Name for the Docker image'
+    required: false
+    default: 'test-api'
+  port:
+    description: 'Port to expose'
+    required: false
+    default: '8000'
+  test-path:
+    description: 'Path to test files'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+        
+    - name: Build and start API container
+      shell: bash
+      working-directory: ${{ inputs.docker-file-path }}
+      run: |
+        docker build -t ${{ inputs.docker-image-name }} .
+        docker run -d -p ${{ inputs.port }}:${{ inputs.port }} ${{ inputs.docker-image-name }}
+        
+    - name: Install test dependencies 
+      shell: bash
+      run: pip install pytest requests
+        
+    - name: Run tests
+      shell: bash
+      run: |
+        sleep 2  # Give API time to start
+        pytest ${{ inputs.test-path }} -v
+        
+    - name: Cleanup
+      if: always()
+      shell: bash
+      run: docker ps -q | xargs -r docker stop
