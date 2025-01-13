@@ -1,0 +1,32 @@
+name: Integration Tests
+on: workflow_dispatch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+
+      - name: Build and start API container
+        working-directory: demo/src/api
+        run: |
+          docker build -t test-api .
+          docker run -d -p 8000:8000 test-api
+
+      - name: Install test dependencies 
+        run: pip install pytest requests
+
+      - name: Run tests
+        working-directory: src/actions_poc
+        run: |
+          # Give the API a moment to start
+          sleep 2
+          pytest demo/test/integration/test_integration_api.py -v
+
+      - name: Cleanup
+        if: always()
+        run: docker ps -q | xargs -r docker stop
