@@ -1,4 +1,4 @@
-name: Build Source
+name: Build - ros-tooling
 on: workflow_dispatch
 
 jobs:

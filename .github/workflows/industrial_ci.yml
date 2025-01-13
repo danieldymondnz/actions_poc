@@ -1,4 +1,4 @@
-name: CI
+name: Build - industrial_ci
 
 on: workflow_dispatch
 
