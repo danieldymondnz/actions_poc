@@ -16,6 +16,8 @@ jobs:
         run: |
           docker build -t test-api .
           docker run -d -p 8000:8000 test-api
+          sleep 2
+          curl -v http://localhost:8000/health
 
       - name: Install test dependencies 
         run: pip install pytest requests
