@@ -7,6 +7,8 @@ jobs:
     container:
       image: ros:noetic
     steps:
+      - name: Install Pre-Reqs
+        run: sudo apt-get install -y colcon-common-extensions colcon-lcov-result colcon-coveragepy-result colcon-mixin rosdep vcstool
       # - uses: ros-tooling/setup-ros@v0.7
       #   with:
       #     required-ros-distributions: noetic
