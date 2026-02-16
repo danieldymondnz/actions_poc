@@ -10,7 +10,7 @@ jobs:
           # - {ROS_DISTRO: noetic, ROS_REPO: testing}
           - {ROS_DISTRO: noetic, ROS_REPO: main}
     # runs-on: ubuntu-latest
-    runs-on: arc-runner-set
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - uses: 'ros-industrial/industrial_ci@master'
